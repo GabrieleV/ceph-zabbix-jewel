@@ -1,24 +1,27 @@
-ceph-zabbix-jewel
+Zabbix-ceph-jewel
 
-是基于 https://github.com/thelan/ceph-zabbix 的修改版本，在整体思路一致的情况下,进行一些优化和新的适配，方便扩展
+Check items of a ceph cluster and notify health problems.
 
-##安装
-
-将 zabbix_agent_ceph_plugin.conf 拷贝到 /etc/zabbix/zabbix_agentd.d/ 路径下面
+Based on https://github.com/zphj1987/ceph-zabbix-jewel.
 
 
+##installation
 
-将 ceph-status.py 拷贝到可执行的路径下面，现在先规定为 /sbin/ceph-status.py
+    cp etc/zabbix/zabbix_agentd.d/zabbix-ceph-jewel.conf  /etc/zabbix/zabbix_agentd.d
+    systemctl restart zabbix-agent
 
-##模板
+    mkdir -p /etc/zabbix/scripts
+    cp etc/zabbix/scripts/ceph-status.py /etc/zabbix/scripts/
+    chmod +x /etc/zabbix/scripts/ceph-status.py
 
-模板目前还处于开发节点，一个个添加
+    cp etc/sudoers.d/zabbix-ceph-jewel /etc/sudoers.d/zabbix-ceph-jewel
 
-完成集群状态获取
-完成集群使用百分比的获取
+Test from agent machine:
+    sudo -u zabbix /usr/bin/sudo /etc/zabbix/scripts/ceph-status.py health
 
+Test from server/proxy
+    zabbix_get -s 1.2.3.4  -k ceph.health
 
+##template
 
-
-##图例：
-![](http://static.zybuluo.com/zphj1987/uukuprw99x5uhmwr32yfy6qk/grafana.png)
+Load the XML template into Zabbix
